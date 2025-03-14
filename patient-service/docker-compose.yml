@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # PostgreSQL database service
+  patient-service-db:
+    image: postgres:latest
+    container_name: patient-service-db
+    environment:
+      POSTGRES_USER: admin_user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+    ports:
+      - "5001:5432"
+    networks:
+      - internal
+    volumes:
+      - /var/lib/postgresql/data
+    restart: always
+
+  # Patient Service Spring Boot Application
+  patient-service:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Uses the Dockerfile in the root directory
+    container_name: patient-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://patient-service-db:5432/db
+      SPRING_DATASOURCE_USERNAME: admin_user
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - "4000:4000"  # Expose the app on port 4000
+    depends_on:
+      - patient-service-db
+    networks:
+      - internal
+    restart: always
+
+networks:
+  internal:
+    driver: bridge

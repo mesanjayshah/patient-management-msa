@@ -20,12 +20,12 @@ jobs:
           java-version: 21
 
       - name: Unit Tests
-        run: mvn -B test patient-service/pom.xml
+        run: mvn -B test --file patient-service/pom.xml
 
       - name: Build the application
         run: |
           mvn clean
-          mvn -B package patient-service/pom.xml
+          mvn -B package --file patient-service/pom.xml
           
       - name: Build Docker Image
         uses: docker/build-push-action@v2

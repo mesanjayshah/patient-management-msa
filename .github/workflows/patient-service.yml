@@ -51,3 +51,7 @@ jobs:
           push: true
           no-cache: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/patient-service:today
+
+      - name: Run the container
+        run: |
+          docker run -d -p 4000:4000 --name patient-service ${{ secrets.DOCKER_HUB_USERNAME }}/patient-service:today

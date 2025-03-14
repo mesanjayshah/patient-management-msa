@@ -22,27 +22,34 @@ jobs:
           distribution: 'corretto'
           java-version: 21
 
-      # Step 3: Install dependencies and run unit tests (specify pom.xml location)
+      # Step 3: Install Docker Compose
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+
+      # Step 4: Install dependencies and run unit tests (specify pom.xml location)
       - name: Unit Tests
         run: mvn -B test --file ./patient-service/pom.xml
 
-      # Step 4: Build the application (specify pom.xml location)
+      # Step 5: Build the application (specify pom.xml location)
       - name: Build the application
         run: |
           mvn clean --file ./patient-service/pom.xml
           mvn -B package --file ./patient-service/pom.xml
 
-      # Step 5: Build Docker Image for Patient Service
+      # Step 6: Build Docker Image for Patient Service
       - name: Build Docker Image for Patient Service
         run: |
           docker-compose -f patient-service.yml build
 
-      # Step 6: Run Docker Compose to Start Containers (PostgreSQL and Patient Service)
+      # Step 7: Run Docker Compose to Start Containers (PostgreSQL and Patient Service)
       - name: Run Docker Compose
         run: |
           docker-compose -f patient-service.yml up -d
 
-      # Step 7: Wait for PostgreSQL container to be ready
+      # Step 8: Wait for PostgreSQL container to be ready
       - name: Wait for PostgreSQL
         run: |
           until docker exec patient-service-db pg_isready -U admin_user -d db; do
@@ -50,13 +57,13 @@ jobs:
             sleep 5
           done
 
-      # Step 8: Run Post-Deployment Tasks
+      # Step 9: Run Post-Deployment Tasks
       - name: Run Post-Deployment Tasks
         run: |
           # Add any post-deployment tasks here, like API tests or health checks
           echo "Running post-deployment tasks..."
 
-      # Step 9: Push Docker Image to Docker Hub (optional if you want to push to a registry)
+      # Step 10: Push Docker Image to Docker Hub (optional if you want to push to a registry)
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:

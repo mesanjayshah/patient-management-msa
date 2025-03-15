@@ -42,7 +42,7 @@ jobs:
       # Step 6: Build Docker Image for Patient Service
       - name: Build Docker Image for Patient Service
         run: |
-          docker-compose -f patient-service.yml build
+          docker-compose -f patient-mgmt/patient-service/docker-compose.yml build
 
       # Step 7: Run Docker Compose to Start Containers (PostgreSQL and Patient Service)
       - name: Run Docker Compose

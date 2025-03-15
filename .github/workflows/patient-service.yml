@@ -72,5 +72,5 @@ jobs:
 
       - name: Push Docker Image to Docker Hub
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/patient-service:today .
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/patient-service:today ./patient-service
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/patient-service:today
